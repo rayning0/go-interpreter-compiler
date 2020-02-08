@@ -1,16 +1,16 @@
 # Interpreter and Compiler in Golang for Monkey programming language
 
-Monkey has a C-like syntax, supports variable bindings, prefix and infix operators, has first-class and higher-order functions, can handle closures with ease, and has built-in integers, booleans, arrays and hashes.
+**Monkey** has a C-like syntax, supports variable bindings, prefix and infix operators, has first-class and higher-order functions, can handle closures with ease, and has built-in integers, booleans, arrays and hashes.
 
 Based on Thorsten Ball's books interpreterbook.com and compilerbook.com
 
 **By Raymond Gan**
 
 ## Part 1: Interpreter
-- Building an interpreter for a C-like programming language from scratch, with NO 3rd party libraries
-- Building a lexer, a parser and an Abstract Syntax Tree (AST)
+- Build an **interpreter** for a C-like programming language from scratch, with NO 3rd party libraries.
+- Build a lexer, a parser, and Abstract Syntax Tree (AST). A **lexer** converts source code to tokens. A **parser** converts tokens to an **Abstract Syntax Tree**. **Tokens** are small, easily categorizable data structures.
 - The Pratt parsing technique and a recursive descent parser
-- Building a REPL
+- Build a REPL
 - Build a tree-walking evaluator
 
 Monkey language:
@@ -59,7 +59,7 @@ let getName = fn(person) { person["name"]; };
 getName(people[0]); // => "Anna"
 getName(people[1]); // => "Bob"
 ```
-In Monkey functions are first-class citizens, treated like any other value. Thus we can use higher-order functions and pass functions around as values:
+In Monkey, functions are first-class citizens, treated like any other value. Thus we can use higher-order functions and pass functions around as values:
 ```
 // Define the higher-order function `map`, that calls the given function `f`
 // on each element in `arr` and returns an array of the produced values.
@@ -96,7 +96,7 @@ hello("dear, future Reader!"); // => Hello dear, future Reader!
 ```
 ## Part 2: Compiler
 
-- Take the lexer, the parser, the AST, the REPL and the object system and use them to build a new, faster implementation of Monkey
+- Take the lexer, parser, AST, REPL and object system and use them to build a new, faster implementation of Monkey.
 - Change its architecture and turn it into a **bytecode compiler and virtual machine**, from scratch.
 - Build compiler and VM side-by-side so that we always have a running system to steadily evolve.
 
