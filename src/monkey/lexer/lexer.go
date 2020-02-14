@@ -8,12 +8,12 @@ type Lexer struct {
 	readPosition int  // next reading position in input
 	ch           byte // current char
 
-	// Both position and readPosition are to access characters in input by using
-	// them as an index, ex.: l.input[l.readPosition]. These 2 “pointers” point into
-	// our input string because we need to “peek” ahead to see what comes
-	// next after the current character. readPosition always points to the “next”
-	// input character. position points to input character corresponding to
-	// the ch byte.
+	// Both position and readPosition access characters in input by using
+	// them as an index. Ex: l.input[l.readPosition]. These 2 cursors point into
+	// our input string because we must “peek” ahead to see what comes
+	// next after the current character.
+	// "readPosition" always points to the next input character.
+	// "position" points to input character corresponding to the ch byte.
 }
 
 func New(input string) *Lexer {
@@ -22,6 +22,8 @@ func New(input string) *Lexer {
 	return l
 }
 
+// Read 1 new character.
+// "position": current index read. "readPosition": next index to be read.
 // Only for ASCII characters, not full UTF-8
 func (l *Lexer) readChar() {
 
@@ -29,7 +31,6 @@ func (l *Lexer) readChar() {
 	// So we've read nothing yet or it's EOF.
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
-
 	} else {
 		l.ch = l.input[l.readPosition] // next character
 	}
@@ -38,6 +39,7 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+// given input character, return its token
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
@@ -65,14 +67,11 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
+			// Calling readIdentifier() loops through readChar() repeatedly and advances our
+			// readPosition and position fields past last character of current identifier.
+			// Returns string literal that starts with l.ch.
 			tok.Literal = l.readIdentifier()
-			tok.Type = token.LookupIdent(tok.Literal)
-
-			//The early exit here, our return tok statement, is necessary because when
-			//calling readIdentifier(), we call readChar() repeatedly and advance our
-			//readPosition and position fields past the last character of the current
-			//identifier. So we don’t need the call to readChar() after the switch
-			//statement again.
+			tok.Type = token.LookupIdent(tok.Literal) // returns TokenType of literal
 			return tok
 		} else if isDigit(l.ch) {
 			tok.Type = token.INT
@@ -88,9 +87,8 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
-// If current character is a letter, read rest of the identifier/keyword
-// till we hit a non-letter. Having read that identifier/keyword, find out if
-// it's an identifier or keyword, to use correct token.TokenType.
+// If current character is a letter, loop through rest of the
+// identifier/keyword till we hit a non-letter. Return substring.
 func (l *Lexer) readIdentifier() string {
 	position := l.position
 	for isLetter(l.ch) {
@@ -109,12 +107,14 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
+//
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
 }
 
+// like readIdentifier() but for digits
 func (l *Lexer) readNumber() string {
 	position := l.position
 	for isDigit(l.ch) {
