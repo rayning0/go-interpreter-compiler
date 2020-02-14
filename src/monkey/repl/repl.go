@@ -30,3 +30,24 @@ func Start(in io.Reader, out io.Writer) {
 		}
 	}
 }
+
+// Sample REPL output, showing all tokens of input line:
+
+// >> let add = fn(x, y) { x + y; };
+
+// {Type:LET Literal:let}
+// {Type:IDENT Literal:add}
+// {Type:= Literal:=}
+// {Type:FUNCTION Literal:fn}
+// {Type:( Literal:(}
+// {Type:IDENT Literal:x}
+// {Type:, Literal:,}
+// {Type:IDENT Literal:y}
+// {Type:) Literal:)}
+// {Type:{ Literal:{}
+// {Type:IDENT Literal:x}
+// {Type:+ Literal:+}
+// {Type:IDENT Literal:y}
+// {Type:; Literal:;}
+// {Type:} Literal:}}
+// {Type:; Literal:;}
